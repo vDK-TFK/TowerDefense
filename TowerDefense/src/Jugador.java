@@ -18,5 +18,10 @@ public class Jugador {
     private Tropa tropaSeleccionada;
     private Cola listaTropasJUG = new Cola();
 
+    public Jugador() {
+    }
+    
+    
+
     
 }

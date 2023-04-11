@@ -25,6 +25,13 @@ public class Camino {
         label.repaint();  
     }
     
+    public void ingresarTropa(){
+        Icon icono = new ImageIcon(tropa.getCaracter().getImage().getScaledInstance
+        (label.getWidth(),label.getHeight(),Image.SCALE_DEFAULT));
+        label.setIcon(icono);
+        label.repaint();  
+    }
+    
     public void eliminarTropa(){
         label.setIcon(null);
         label.repaint();

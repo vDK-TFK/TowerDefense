@@ -20,6 +20,9 @@ public class CPU {
     private Cola listaTropasCPU = new Cola();
     private Cola listaTropasMostrar = new Cola();
     private Random random = new Random();
+
+    public CPU() {
+    }
     
     public void tropaRandom(Camino Superior, Camino Inferior, Cola tropas){
         
