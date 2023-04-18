@@ -19,4 +19,16 @@ public class Enfrentamiento {
             caminoCPU.eliminarTropa();
         }
     }    
+
+
+    public int casosEnfrentamiento(Tropa tropaJugador, Tropa tropaCPU){
+        if(tropaJugador.getFortaleza() == tropaCPU.getDebilidad()){
+            return 1;
+        } else if(tropaJugador.getDebilidad() == tropaCPU.getFortaleza()){
+            return 2;
+        } else{
+            return 3;
+        }
+    }
 }
+

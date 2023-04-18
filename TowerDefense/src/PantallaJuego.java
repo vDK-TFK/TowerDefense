@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.Timer;
 
 /*
@@ -21,7 +22,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     private final int PANEL_WIDTH = 600;
     private final int PANEL_HEIGHT = 600;
     private Image backGroundImage;
-    private Timer timer;
+    private Timer timer = null;
     private int xVelocity = 1;
     private int yVelocity = 1;
     private int x = 0;
@@ -37,12 +38,9 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     private int minutos = 0;
     private int numTropasJugador = 0;
     private int numTropasCPU = 0;
+    private int numTropasTablero = 0;
     
-    
-    
-    
-    
-    
+
     
     /**
      * Creates new form PantallaJuego
@@ -50,27 +48,34 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     public PantallaJuego() {
         initComponents();
         
+        // Creacion de los objetos de tropas
         Tropa arquero = new Tropa("arquero");
         Tropa mago = new Tropa("mago");
         Tropa caballero = new Tropa("caballero");
         
+        // Creacion cola de unidades
         colaUnidades.encola(new Nodo(arquero));
         colaUnidades.encola(new Nodo(mago));
         colaUnidades.encola(new Nodo(caballero));
         
         
         
-        
+        // Creacion de los caminos y su inclusion en la lista doblemente enlazada
+        // Camino superior 
         Camino caminoSup1 = new Camino();
         caminoSuperior.inserta(caminoSup1);
+ 
+        
         Camino caminoSup2 = new Camino();
         caminoSuperior.inserta(caminoSup2);
+        
         Camino caminoSup3 = new Camino();
         caminoSuperior.inserta(caminoSup3);
+        
         Camino caminoSup4 = new Camino();
         caminoSuperior.inserta(caminoSup4);
-        Camino caminoSup5 = new Camino();
-        caminoSuperior.inserta(caminoSup5);
+        
+        // Camino inferior
         Camino caminoInf1 = new Camino();
         caminoSuperior.inserta(caminoInf1);
         Camino caminoInf2 = new Camino();
@@ -79,8 +84,6 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         caminoSuperior.inserta(caminoInf3);
         Camino caminoInf4 = new Camino();
         caminoSuperior.inserta(caminoInf4);
-        Camino caminoInf5 = new Camino();
-        caminoSuperior.inserta(caminoInf5);
         
         
         
@@ -109,36 +112,28 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         buttonGroup4 = new javax.swing.ButtonGroup();
         buttonGroup5 = new javax.swing.ButtonGroup();
         jCheckBox3 = new javax.swing.JCheckBox();
+        buttonGroup6 = new javax.swing.ButtonGroup();
+        buttonGroup7 = new javax.swing.ButtonGroup();
         gamePanel = new javax.swing.JPanel();
         boardLabel = new javax.swing.JLabel();
         vidaJugadorTxt = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        MagoTxt = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        tropasDisponiblesTxt = new javax.swing.JTextField();
         vidaJugadorPB = new javax.swing.JProgressBar();
         jLabel1 = new javax.swing.JLabel();
         vidaCPUPB = new javax.swing.JProgressBar();
-        superiorMagoBT = new javax.swing.JRadioButton();
-        inferiorArqueroBT = new javax.swing.JRadioButton();
-        superiorCaballeroBT = new javax.swing.JRadioButton();
-        superiorArqueroBT = new javax.swing.JRadioButton();
-        inferiorMagoBT = new javax.swing.JRadioButton();
-        inferiorCaballeroBT = new javax.swing.JRadioButton();
-        goMagoBT = new javax.swing.JButton();
-        goArqueroBT = new javax.swing.JButton();
-        goCaballeroBT = new javax.swing.JButton();
+        enviarTropaBT = new javax.swing.JButton();
         temporizadorTxt = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
+        numRondaTxt = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox4 = new javax.swing.JCheckBox();
+        primerasUnidadesCPUTxt = new javax.swing.JTextArea();
+        tropaComboBox = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        carrilComboBox = new javax.swing.JComboBox<>();
 
         board.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/Board(1).png"))); // NOI18N
 
@@ -166,15 +161,9 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
         jLabel2.setText("Temporizador");
 
-        MagoTxt.setText("Mago:");
-
-        jLabel3.setText("Arquero:");
-
         jLabel4.setText("Ronda:");
 
         jLabel5.setText("Cantidad de tropas disponibles:");
-
-        jLabel6.setText("Caballero:");
 
         vidaJugadorPB.setBackground(new java.awt.Color(255, 51, 51));
 
@@ -184,38 +173,33 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
         vidaCPUPB.setBackground(new java.awt.Color(255, 51, 51));
 
-        buttonGroup1.add(superiorMagoBT);
-        superiorMagoBT.setText("Superior");
+        enviarTropaBT.setBackground(new java.awt.Color(255, 204, 102));
+        enviarTropaBT.setText("Enviar Tropa");
+        enviarTropaBT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enviarTropaBTActionPerformed(evt);
+            }
+        });
 
-        buttonGroup2.add(inferiorArqueroBT);
-        inferiorArqueroBT.setText("Inferior");
-
-        buttonGroup3.add(superiorCaballeroBT);
-        superiorCaballeroBT.setText("Superior");
-
-        buttonGroup2.add(superiorArqueroBT);
-        superiorArqueroBT.setText("Superior");
-
-        buttonGroup1.add(inferiorMagoBT);
-        inferiorMagoBT.setText("Inferior");
-
-        buttonGroup3.add(inferiorCaballeroBT);
-        inferiorCaballeroBT.setText("Inferior");
-
-        goMagoBT.setBackground(new java.awt.Color(255, 204, 102));
-        goMagoBT.setText("GO!");
-
-        goArqueroBT.setBackground(new java.awt.Color(255, 204, 102));
-        goArqueroBT.setText("GO!");
-
-        goCaballeroBT.setBackground(new java.awt.Color(255, 204, 102));
-        goCaballeroBT.setText("GO!");
+        temporizadorTxt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                temporizadorTxtActionPerformed(evt);
+            }
+        });
 
         jLabel7.setText("Primer tres unidades CPU");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        primerasUnidadesCPUTxt.setColumns(20);
+        primerasUnidadesCPUTxt.setRows(5);
+        jScrollPane1.setViewportView(primerasUnidadesCPUTxt);
+
+        tropaComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Mago", "Arquero", "Caballero", " " }));
+
+        jLabel3.setText("Tropa");
+
+        jLabel6.setText("Carril");
+
+        carrilComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Carril Superior", "Carril Inferior" }));
 
         javax.swing.GroupLayout gamePanelLayout = new javax.swing.GroupLayout(gamePanel);
         gamePanel.setLayout(gamePanelLayout);
@@ -223,148 +207,146 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
             gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gamePanelLayout.createSequentialGroup()
                 .addComponent(boardLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gamePanelLayout.createSequentialGroup()
+                        .addGap(45, 45, 45)
                         .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(gamePanelLayout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(gamePanelLayout.createSequentialGroup()
-                                        .addComponent(temporizadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(gamePanelLayout.createSequentialGroup()
-                                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(gamePanelLayout.createSequentialGroup()
-                                                .addComponent(jLabel5)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(gamePanelLayout.createSequentialGroup()
-                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(gamePanelLayout.createSequentialGroup()
-                                                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                                    .addGroup(gamePanelLayout.createSequentialGroup()
-                                                        .addComponent(MagoTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(jCheckBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gamePanelLayout.createSequentialGroup()
-                                                        .addComponent(jLabel3)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(jCheckBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, gamePanelLayout.createSequentialGroup()
-                                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(jCheckBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                                .addGap(79, 79, 79)
-                                                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(superiorCaballeroBT, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(superiorArqueroBT, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(superiorMagoBT, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGap(40, 40, 40)
-                                                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addGroup(gamePanelLayout.createSequentialGroup()
-                                                        .addComponent(inferiorCaballeroBT, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(goCaballeroBT))
-                                                    .addGroup(gamePanelLayout.createSequentialGroup()
-                                                        .addComponent(inferiorArqueroBT, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(goArqueroBT))
-                                                    .addGroup(gamePanelLayout.createSequentialGroup()
-                                                        .addComponent(inferiorMagoBT, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                        .addComponent(goMagoBT)))))
-                                        .addGap(24, 24, 24))))
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(tropasDisponiblesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(gamePanelLayout.createSequentialGroup()
-                                .addGap(35, 35, 35)
-                                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(vidaCPUPB, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(vidaJugadorPB, javax.swing.GroupLayout.PREFERRED_SIZE, 399, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(vidaJugadorTxt))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(tropaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(gamePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(carrilComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(enviarTropaBT)))
                     .addGroup(gamePanelLayout.createSequentialGroup()
-                        .addGap(60, 60, 60)
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel7)
-                        .addGap(54, 54, 54))))
+                        .addGap(34, 34, 34)
+                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(vidaJugadorTxt)
+                            .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(vidaCPUPB, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(vidaJugadorPB, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 351, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel7)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(gamePanelLayout.createSequentialGroup()
+                        .addGap(45, 45, 45)
+                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(gamePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(temporizadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(gamePanelLayout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(numRondaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         gamePanelLayout.setVerticalGroup(
             gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gamePanelLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(29, 29, 29)
-                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
-                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(MagoTxt)
-                        .addComponent(superiorMagoBT)
-                        .addComponent(inferiorMagoBT)
-                        .addComponent(goMagoBT))
-                    .addComponent(jCheckBox2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(superiorArqueroBT)
-                        .addComponent(inferiorArqueroBT)
-                        .addComponent(goArqueroBT))
-                    .addComponent(jCheckBox1, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addGap(37, 37, 37)
-                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(superiorCaballeroBT)
-                        .addComponent(inferiorCaballeroBT)
-                        .addComponent(goCaballeroBT))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, gamePanelLayout.createSequentialGroup()
-                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jCheckBox4)
-                            .addComponent(jLabel6))
-                        .addGap(3, 3, 3)))
-                .addComponent(vidaJugadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(vidaJugadorPB, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(gamePanelLayout.createSequentialGroup()
+                        .addGap(38, 38, 38)
+                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(temporizadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel2))
+                        .addGap(18, 18, 18)
+                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel4)
+                            .addComponent(numRondaTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23)
+                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(tropasDisponiblesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(tropaComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6)
+                            .addComponent(carrilComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(enviarTropaBT)
+                        .addGap(18, 18, 18)
+                        .addComponent(vidaJugadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(vidaJugadorPB, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(vidaCPUPB, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel2))
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(gamePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(temporizadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-            .addComponent(boardLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 612, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(boardLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(gamePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(gamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addComponent(gamePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void temporizadorTxtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_temporizadorTxtActionPerformed
+        // TODO add your handling code here:
+
+    }//GEN-LAST:event_temporizadorTxtActionPerformed
+
+    private void enviarTropaBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarTropaBTActionPerformed
+        
+//        numTropasJugador = numeroRonda + 4;
+//        tropasDisponiblesTxt.setText(Integer.toString(numTropasJugador));
+//        Tropa tropaSeleccionada = new Tropa(tropaComboBox.getSelectedItem().toString());
+//        
+//        if (numTropasJugador != 0) {
+//            enviarTropaBT.setVisible(true);
+//            
+//            if (caminoSuperior.extrae(0).getTropa() != null) {
+//                Enfrentamiento enfrentamiento = new Enfrentamiento();
+//                int battleResult = enfrentamiento.casosEnfrentamiento(tropaSeleccionada, caminoSuperior.extrae(0).getTropa());
+//                
+//                switch(battleResult){
+//                    case 1:
+//                        
+//                        
+//                        
+//                }
+//                
+//                
+//                
+//                
+//                
+//            } else{
+//                Camino entradaCamino = caminoInferior.extrae(1);
+//                entradaCamino.setTropa(tropaSeleccionada);
+//                entradaCamino.ingresarTropa(tropaSeleccionada);
+//                numTropasJugador--;
+//            }
+//        } else{
+//            enviarTropaBT.setVisible(false);
+//        }
+        
+
+    }//GEN-LAST:event_enviarTropaBTActionPerformed
 
     /**
      * @param args the command line arguments
@@ -400,9 +382,9 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
             }
         });
     }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel MagoTxt;
     private javax.swing.JLabel board;
     private javax.swing.JLabel boardLabel;
     private javax.swing.ButtonGroup buttonGroup1;
@@ -410,17 +392,12 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.ButtonGroup buttonGroup4;
     private javax.swing.ButtonGroup buttonGroup5;
+    private javax.swing.ButtonGroup buttonGroup6;
+    private javax.swing.ButtonGroup buttonGroup7;
+    private javax.swing.JComboBox<String> carrilComboBox;
+    private javax.swing.JButton enviarTropaBT;
     private javax.swing.JPanel gamePanel;
-    private javax.swing.JButton goArqueroBT;
-    private javax.swing.JButton goCaballeroBT;
-    private javax.swing.JButton goMagoBT;
-    private javax.swing.JRadioButton inferiorArqueroBT;
-    private javax.swing.JRadioButton inferiorCaballeroBT;
-    private javax.swing.JRadioButton inferiorMagoBT;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JCheckBox jCheckBox4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -435,13 +412,11 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuBar jMenuBar3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JRadioButton superiorArqueroBT;
-    private javax.swing.JRadioButton superiorCaballeroBT;
-    private javax.swing.JRadioButton superiorMagoBT;
+    private javax.swing.JTextField numRondaTxt;
+    private javax.swing.JTextArea primerasUnidadesCPUTxt;
     private javax.swing.JTextField temporizadorTxt;
+    private javax.swing.JComboBox<String> tropaComboBox;
+    private javax.swing.JTextField tropasDisponiblesTxt;
     private javax.swing.JProgressBar vidaCPUPB;
     private javax.swing.JProgressBar vidaJugadorPB;
     private javax.swing.JLabel vidaJugadorTxt;
@@ -449,5 +424,8 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent e) { 
+        
+        
+        
     }
 }

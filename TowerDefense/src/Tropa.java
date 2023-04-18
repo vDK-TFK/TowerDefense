@@ -101,17 +101,17 @@ public class Tropa {
             this.fortaleza = "Caballero";
             this.debilidad = "Arquero";
             this.danoCastillo = 1.5;
-            this.caracter = new ImageIcon("src/Imagenes/mago.png");
+            this.caracter = new ImageIcon("src/Imagenes/arquero.jpeg");
         } else if(tipoTropa.equals("Caballero")){
             this.fortaleza = "Arquero";
             this.debilidad = "Mago";
             this.danoCastillo = 2;
-            this.caracter = new ImageIcon("src/Imagenes/caballero.png");
+            this.caracter = new ImageIcon("src/Imagenes/caballero.caballero.jpeg");
         } else if(tipoTropa.equals("Arquero")){
             this.fortaleza = "Mago";
             this.debilidad = "Caballero";
             this.danoCastillo = 1;
-            this.caracter = new ImageIcon("src/Imagenes/arquero.png");
+            this.caracter = new ImageIcon("src/Imagenes/arquero.jpeg");
         }
         
     }
