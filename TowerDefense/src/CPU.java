@@ -18,7 +18,7 @@ public class CPU {
     private double cantTropasTotales = 0;
     private Tropa tropaSeleccionada;
     private Cola listaTropasCPU = new Cola();
-    private Cola listaTropasMostrar = new Cola();
+    private String listaTropasMostrar[] = new String[2];
     private Random random = new Random();
 
     public CPU() {
@@ -59,12 +59,39 @@ public class CPU {
         cantTropasTotales++;
     }
     
-    private void mostrarUnidadesCPU(){
+    public void primerasUnidadesCPU(){
         for(int i=0; i<3; i++){
-            listaTropasCPU.imprimir();
+           String tropa = listaTropasCPU.atiende().getDato().getTipoTropa();
+           listaTropasMostrar[i] = tropa;
         }  
     }
     
+    public String imprimirPrimeraUnidad(){
+        return listaTropasMostrar[0];
+    }
+    
+    public String imprimirSegundaUnidad(){
+        return listaTropasMostrar[0];
+    }
+    
+    public String imprimirTerceraUnidad(){
+        return listaTropasMostrar[0];
+    }
+    
+    public double getCantTropasTotales() {
+        return cantTropasTotales;
+    }
+
+    public void numTropasCaminoSup(){
+        numTropasCaminoSuperior--;
+        cantTropasTotales--;
+    }
+    
+    public void numTropasCaminoInf(){
+        numTropasCaminoInferior--;
+        cantTropasTotales--;
+    }
+     
 }
 
 

@@ -13,8 +13,18 @@ public class MoverCpu extends Thread {
     private Castillo jugadorCastillo;
     private PantallaJuego pantalla;
     private Enfrentamiento batalla = new Enfrentamiento();
-    //private MoverCpu moverCpu;
+    private CPU CPU;
+    
+    public MoverCpu(ListaDobleCirc caminosuperior, ListaDobleCirc caminoinferior, Castillo jugadorCastillo, PantallaJuego pantalla, CPU CPU) {
+        this.caminosuperior = caminosuperior;
+        this.caminoinferior = caminoinferior;
+        this.jugadorCastillo = jugadorCastillo;
+        this.pantalla = pantalla;
+        this.CPU = CPU;
+    }
 
+    //private MoverCpu moverCpu;
+    
     @Override
     public void run() {
         if (jugadorCastillo.castilloDestruido() != false) {
@@ -25,7 +35,12 @@ public class MoverCpu extends Thread {
     public void moverCPU (ListaDobleCirc camino) {
         for (int i = 0; i < camino.getLargo(); i++) {
             if (camino.extrae(i).getTropa().getCaracter() != null) {
-
+                
+                try{
+                    Thread.sleep(1000);
+                }catch(Exception e){
+                }
+                
                 if (camino.isUltimo(i)) {
                     jugadorCastillo.danoCastillo(camino.extrae(i).getTropa().getDanoCastillo());
                     camino.extrae(i).setTropa(null);
@@ -61,12 +76,7 @@ public class MoverCpu extends Thread {
         }
     }
 
-    public MoverCpu(ListaDobleCirc caminosuperior, ListaDobleCirc caminoinferior, Castillo jugadorCastillo, PantallaJuego pantalla) {
-        this.caminosuperior = caminosuperior;
-        this.caminoinferior = caminoinferior;
-        this.jugadorCastillo = jugadorCastillo;
-        this.pantalla = pantalla;
-    }
+    
     
     
 }
