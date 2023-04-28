@@ -12,10 +12,10 @@ public class Castillo {
     private double vida = 10;
 
     // Constructor vacio
-    public Castillo() {
+    public Castillo(double vida) {
+        this.vida = vida;
     }
-    
-    
+
     // Get y sets de la vida del castillo
     public double getVida() {
         return vida;
@@ -24,24 +24,17 @@ public class Castillo {
     public void setVida(double vida) {
         this.vida = vida;
     }
-    
+
     //Metodo para bajar la vida del castillo
-    
-    public void danoCastillo(double dano){
-        vida -=dano;
+    public void danoCastillo(double dano) {
+        this.vida -= dano;
     }
 
     // Metodo para saber si el castillo ha sido destruido
-
-    public boolean castilloDestruido(){
-        if (vida <= 0){
-           return true; 
-        } 
+    public boolean castilloDestruido() {
+        if (vida <= 0) {
+            return true;
+        }
         return false;
     }
-    
-    
-    
-    
-    
 }

@@ -643,8 +643,43 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     }//GEN-LAST:event_tropaComboBoxActionPerformed
 
     private void enviarTropaBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarTropaBTActionPerformed
+        switch (tropaComboBox.getSelectedItem().toString()) {
+            case "Arquero": {
+                tTropa = new Tropa(arquero, new ImageIcon("src/Imagenes/imagenArquero.jpeg"), 1);
+                tTropa.setPoscionActual(1);
+                NodoPersonaje = new NodoCo(tTropa);
+            }
+            break;
 
+            case "Caballero": {
+                tTropa = new Tropa(caballero, new ImageIcon("src/Imagenes/imagenCaballero.jpeg"), 2);
+                tTropa.setPoscionActual(1);
+                NodoPersonaje = new NodoCo(tTropa);
+            }
+            break;
 
+            case "Mago": {
+                tTropa = new Tropa(mago, new ImageIcon("src/Imagenes/imagenMago.jpeg"), 1.5);
+                tTropa.setPoscionActual(1);
+                NodoPersonaje = new NodoCo(tTropa);
+            }
+            break;
+        }
+
+        switch (caminoComboBox.getSelectedItem().toString()) {
+            case "Carril Superior":
+                if (jugador.getTropasSup().getLargo() == 0) {
+                    jugador.getTropasSup().encola(NodoPersonaje);
+                    MoverTropasJugador(true, false);
+                }
+                break;
+            case "Carril Inferior":
+                if (jugador.getTropaInf().getLargo() == 0) {
+                    jugador.getTropaInf().encola(NodoPersonaje);
+                    MoverTropasJugador(false, true);
+                }
+                break;
+        }
     }//GEN-LAST:event_enviarTropaBTActionPerformed
 
     private void BtnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnIniciarActionPerformed
