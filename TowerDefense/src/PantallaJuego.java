@@ -1,4 +1,7 @@
 
+
+
+
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -39,13 +42,17 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     TipoPersonaje caballero;
     TipoPersonaje mago;
     Tropa tTropa;
+    Tropa tSTropa;
+    Tropa tITropa;
     Jugador jugador;
     Castillo castilloJugador;
     Castillo castilloCPU;
     NodoCo NodoPersonaje;
     CPU computadora;
     Timer t = new Timer();
-
+    
+    
+    
     public PantallaJuego() {
         initComponents();
         setLocationRelativeTo(null);
@@ -77,6 +84,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         Label.repaint();
     }
 
+    // Metodo para mover las tropas
     public void moverTropas() {
         MoverTropasCPU();
         MoverTropasJugador(true, true);
@@ -84,6 +92,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
     public void MoverTropasCPU() {
         int posicion_real = 0;
+        
         if (computadora.getTropaSup().getLargo() > 0) {
             for (int i = 0; i < computadora.getTropaSup().getLargo(); i++) {
                 Tropa uso = computadora.getTropaSup().encuentra(i);
@@ -123,6 +132,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
                         break;
                     default:
                         posicion_real = -1;
+                        caminoSuperior1.setIcon(null);
                         break;
                 }
 
@@ -132,15 +142,24 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
                     jugador.getCasJugador().danoCastillo(uso.getDano());
                     int vidaN = (int) jugador.getCasJugador().getVida();
                     vidaJugadorPB.setValue(vidaN * 10);
+                    computadora.getTropaSup().tropaEliminar();
+                    
+                    
+                    
+                    
 
                     if (jugador.getCasJugador().castilloDestruido() && !JUGADOR_WINNER) {
                         CPU_WINNER = true;
                         t.cancel();
                         mTimer.cancel();
                         JOptionPane.showMessageDialog(null, "Haz perdido la partida");
+                        
                     }
                 }
             }
+                
+            
+        
         }
 
         if (computadora.getTropaInf().getLargo() > 0) {
@@ -182,6 +201,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
                         break;
                     default:
                         posicion_real = -1;
+                        caminoInferior1.setIcon(null);
                         break;
                 }
 
@@ -191,7 +211,12 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
                     jugador.getCasJugador().danoCastillo(uso.getDano());
                     int vidaN = (int) jugador.getCasJugador().getVida();
                     vidaJugadorPB.setValue(vidaN * 10);
-
+                    computadora.getTropaInf().tropaEliminar();
+                    
+                    
+                    
+                    
+                    
                     if (jugador.getCasJugador().castilloDestruido() && !JUGADOR_WINNER) {
                         CPU_WINNER = true;
                         t.cancel();
@@ -254,6 +279,8 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
                     computadora.getCasCPU().danoCastillo(uso.getDano());
                     int vidaN = (int) computadora.getCasCPU().getVida();
                     vidaCPUPB.setValue(vidaN * 10);
+                    jugador.getTropasSup().tropaEliminar();
+                    caminoSuperior4.setIcon(null);
 
                     if (computadora.getCasCPU().castilloDestruido() && !CPU_WINNER) {
                         JUGADOR_WINNER = true;
@@ -313,6 +340,8 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
                     computadora.getCasCPU().danoCastillo(uso.getDano());
                     int vidaN = (int) computadora.getCasCPU().getVida();
                     vidaCPUPB.setValue(vidaN * 10);
+                    jugador.getTropaInf().tropaEliminar();
+                    caminoInferior4.setIcon(null);
 
                     if (computadora.getCasCPU().castilloDestruido() && !CPU_WINNER) {
                         JUGADOR_WINNER = true;
@@ -325,8 +354,8 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         }
     }
 
-    private void moverUnidades() {
-        int velmil = xVelocity * 1000;
+    public void moverUnidades() {
+        int velmil = xVelocity * 2000;
 
         TimerTask tt = new TimerTask() {
             @Override
@@ -337,8 +366,8 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
         t.schedule(tt, 0, velmil);
     }
-
-    public void iniciarCronometro() {
+    
+    public void iniciarCronometro(){
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
@@ -360,7 +389,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         if (computadora.getTropaInf().getLargo() > 0) {
             mensaje_mostrar += computadora.getTropaInf().imprimir();
         }
-
+        
         unidadesCPUTxt.setText(mensaje_mostrar);
     }
 
@@ -711,20 +740,46 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
                 }
                 break;
         }
+
     }//GEN-LAST:event_enviarTropaBTActionPerformed
 
     private void BtnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnIniciarActionPerformed
         iniciarCronometro();
-
+        
         computadora = new CPU(castilloCPU);
         jugador = new Jugador(castilloJugador);
-
-        tTropa = new Tropa(arquero, new ImageIcon("src/Imagenes/imagenArquero.jpeg"), 1);
+        
+        int randomNum = (int) (Math.random()*2)+1;
+        
+        
+        switch(randomNum){
+            case 1:
+                tTropa = new Tropa(arquero, new ImageIcon("src/Imagenes/imagenArquero.jpeg"), 1);
+                break;
+            case 2:
+                tTropa = new Tropa(mago, new ImageIcon("src/Imagenes/imagenMago.jpeg"), 1.5);
+                break;
+            case 3:
+                tTropa = new Tropa(caballero, new ImageIcon("src/Imagenes/imagenCaballero.jpeg"), 2);
+                break;
+        }
         tTropa.setPoscionActual(4);
         NodoPersonaje = new NodoCo(tTropa);
         computadora.getTropaSup().encola(NodoPersonaje);
-
-        tTropa = new Tropa(mago, new ImageIcon("src/Imagenes/imagenMago.jpeg"), 1.5);
+        
+        int randomNum2 = (int) (Math.random()*2)+1;
+        
+        switch(randomNum2){
+            case 1:
+                tTropa = new Tropa(arquero, new ImageIcon("src/Imagenes/imagenArquero.jpeg"), 1);
+                break;
+            case 2:
+                tTropa = new Tropa(mago, new ImageIcon("src/Imagenes/imagenMago.jpeg"), 1.5);
+                break;
+            case 3:
+                tTropa = new Tropa(caballero, new ImageIcon("src/Imagenes/imagenCaballero.jpeg"), 2);
+                break;
+        }
         tTropa.setPoscionActual(4);
         NodoPersonaje = new NodoCo(tTropa);
         computadora.getTropaInf().encola(NodoPersonaje);
@@ -735,6 +790,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         vidaCPUPB.setValue((int) computadora.getCasCPU().getVida() * 10);
 
         moverUnidades();
+        
     }//GEN-LAST:event_BtnIniciarActionPerformed
 
     private void Cronometro() {
@@ -792,6 +848,9 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
             java.util.logging.Logger.getLogger(PantallaJuego.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
