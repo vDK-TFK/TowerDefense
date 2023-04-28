@@ -1,4 +1,3 @@
-package poryectotowerdefense;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,18 +20,308 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     private final int PANEL_HEIGHT = 600;
     private Image backGroundImage;
 
-    
+    private int xVelocity = 5;
+    private int yVelocity = 1;
+    private int x = 0;
+    private int y = 0;
+    private int numeroRonda = 1;
+    private boolean juegoIniciado = false;
+    private boolean CPU_WINNER = false;
+    private boolean JUGADOR_WINNER = false;
+
+    private Timer mTimer = new Timer();
+
+    private int minutos = 0;
+    private int segundos = 0;
+    private int milisegundos = 0;
+
+    TipoPersonaje arquero;
+    TipoPersonaje caballero;
+    TipoPersonaje mago;
+    Tropa tTropa;
+    Jugador jugador;
+    Castillo castilloJugador;
+    Castillo castilloCPU;
+    NodoCo NodoPersonaje;
+    CPU computadora;
+    Timer t = new Timer();
 
     public PantallaJuego() {
         initComponents();
         setLocationRelativeTo(null);
 
-        
+        //Creacion tipos
+        arquero = new TipoPersonaje(1, "Arquero", 2);
+        caballero = new TipoPersonaje(2, "Caballero", 3);
+        mago = new TipoPersonaje(3, "Mago", 1);
+
+        // Creacion de los objetos de tropas
+        castilloJugador = new Castillo(10);
+        castilloCPU = new Castillo(10);
 
     }
-
-
     
+    public void moverTropas() {
+        MoverTropasCPU();
+        MoverTropasJugador(true, true);
+    }
+
+    public void MoverTropasCPU() {
+        int posicion_real = 0;
+        if (computadora.getTropaSup().getLargo() > 0) {
+            for (int i = 0; i < computadora.getTropaSup().getLargo(); i++) {
+                Tropa uso = computadora.getTropaSup().encuentra(i);
+
+                if (jugador.getTropasSup().getLargo() > 0) {
+                    if (uso.getPoscionActual() == jugador.getTropasSup().ultimaPosicion().getPoscionActual()) {
+                        if (uso.getTipo().getIdDebilidad() == jugador.getTropasSup().ultimaPosicion().getTipo().getIdTipo()) {
+                            computadora.getTropaSup().tropaEliminar();
+                        } else {
+                            jugador.getTropasSup().tropaEliminar();
+                        }
+                    }
+                }
+
+                switch (uso.getPoscionActual()) {
+                    case 4:
+                        paint(caminoSuperior4, computadora.getTropaSup().encuentra(i).getCaracter().getImage());
+                        posicion_real = 3;
+                        break;
+                    case 3:
+                        paint(caminoSuperior3, computadora.getTropaSup().encuentra(i).getCaracter().getImage());
+                        caminoSuperior4.setIcon(null);
+                        repaint();
+                        posicion_real = 2;
+                        break;
+                    case 2:
+                        paint(caminoSuperior2, computadora.getTropaSup().encuentra(i).getCaracter().getImage());
+                        caminoSuperior3.setIcon(null);
+                        repaint();
+                        posicion_real = 1;
+                        break;
+                    case 1:
+                        paint(caminoSuperior1, computadora.getTropaSup().encuentra(i).getCaracter().getImage());
+                        caminoSuperior2.setIcon(null);
+                        repaint();
+                        posicion_real = 0;
+                        break;
+                    default:
+                        posicion_real = -1;
+                        break;
+                }
+
+                uso.setPoscionActual(posicion_real);
+
+                if (uso.getPoscionActual() == -1) {
+                    jugador.getCasJugador().danoCastillo(uso.getDano());
+                    int vidaN = (int) jugador.getCasJugador().getVida();
+                    vidaJugadorPB.setValue(vidaN * 10);
+
+                    if (jugador.getCasJugador().castilloDestruido() && !JUGADOR_WINNER) {
+                        CPU_WINNER = true;
+                        t.cancel();
+                        mTimer.cancel();
+                        JOptionPane.showMessageDialog(null, "Haz perdido la partida");
+                    }
+                }
+            }
+        }
+
+        if (computadora.getTropaInf().getLargo() > 0) {
+            for (int i = 0; i < computadora.getTropaInf().getLargo(); i++) {
+                Tropa uso = computadora.getTropaInf().encuentra(i);
+
+                if (jugador.getTropaInf().getLargo() > 0) {
+                    if (uso.getPoscionActual() == jugador.getTropaInf().ultimaPosicion().getPoscionActual()) {
+                        if (uso.getTipo().getIdDebilidad() == jugador.getTropaInf().ultimaPosicion().getTipo().getIdTipo()) {
+                            computadora.getTropaInf().tropaEliminar();
+                        } else {
+                            jugador.getTropaInf().tropaEliminar();
+                        }
+                    }
+                }
+
+                switch (uso.getPoscionActual()) {
+                    case 4:
+                        paint(caminoInferior4, computadora.getTropaInf().encuentra(i).getCaracter().getImage());
+                        posicion_real = 3;
+                        break;
+                    case 3:
+                        paint(caminoInferior3, computadora.getTropaInf().encuentra(i).getCaracter().getImage());
+                        caminoInferior4.setIcon(null);
+                        repaint();
+                        posicion_real = 2;
+                        break;
+                    case 2:
+                        paint(caminoInferior2, computadora.getTropaInf().encuentra(i).getCaracter().getImage());
+                        caminoInferior3.setIcon(null);
+                        repaint();
+                        posicion_real = 1;
+                        break;
+                    case 1:
+                        paint(caminoInferior1, computadora.getTropaInf().encuentra(i).getCaracter().getImage());
+                        caminoInferior2.setIcon(null);
+                        repaint();
+                        posicion_real = 0;
+                        break;
+                    default:
+                        posicion_real = -1;
+                        break;
+                }
+
+                uso.setPoscionActual(posicion_real);
+
+                if (uso.getPoscionActual() == -1) {
+                    jugador.getCasJugador().danoCastillo(uso.getDano());
+                    int vidaN = (int) jugador.getCasJugador().getVida();
+                    vidaJugadorPB.setValue(vidaN * 10);
+
+                    if (jugador.getCasJugador().castilloDestruido() && !JUGADOR_WINNER) {
+                        CPU_WINNER = true;
+                        t.cancel();
+                        mTimer.cancel();
+                        JOptionPane.showMessageDialog(null, "Haz perdido la partida");
+                    }
+                }
+            }
+        }
+    }
+
+    public void MoverTropasJugador(boolean sup, boolean inf) {
+        int posicion_real = 0;
+        if (jugador.getTropasSup().getLargo() > 0 && sup) {
+            for (int i = 0; i < jugador.getTropasSup().getLargo(); i++) {
+                Tropa uso = jugador.getTropasSup().encuentra(i);
+
+                switch (uso.getPoscionActual()) {
+                    case 1:
+                        paint(caminoSuperior1, jugador.getTropasSup().encuentra(i).getCaracter().getImage());
+                        posicion_real = 2;
+                        break;
+                    case 2:
+                        paint(caminoSuperior2, jugador.getTropasSup().encuentra(i).getCaracter().getImage());
+                        caminoSuperior1.setIcon(null);
+                        repaint();
+                        posicion_real = 3;
+                        break;
+                    case 3:
+                        paint(caminoSuperior3, jugador.getTropasSup().encuentra(i).getCaracter().getImage());
+                        caminoSuperior2.setIcon(null);
+                        repaint();
+                        posicion_real = 4;
+                        break;
+                    case 4:
+                        paint(caminoSuperior4, jugador.getTropasSup().encuentra(i).getCaracter().getImage());
+                        caminoSuperior3.setIcon(null);
+                        repaint();
+                        posicion_real = 5;
+                        break;
+
+                    default:
+                        posicion_real = 6;
+                        break;
+                }
+
+                if (computadora.getTropaSup().getLargo() > 0) {
+                    if (uso.getPoscionActual() == computadora.getTropaSup().ultimaPosicion().getPoscionActual()) {
+                        if (uso.getTipo().getIdDebilidad() == computadora.getTropaSup().ultimaPosicion().getTipo().getIdTipo()) {
+                            jugador.getTropasSup().tropaEliminar();
+                        } else {
+                            computadora.getTropaSup().tropaEliminar();
+                        }
+                    }
+                }
+
+                uso.setPoscionActual(posicion_real);
+
+                if (uso.getPoscionActual() == 6) {
+                    computadora.getCasCPU().danoCastillo(uso.getDano());
+                    int vidaN = (int) computadora.getCasCPU().getVida();
+                    vidaCPUPB.setValue(vidaN * 10);
+
+                    if (computadora.getCasCPU().castilloDestruido() && !CPU_WINNER) {
+                        JUGADOR_WINNER = true;
+                        t.cancel();
+                        mTimer.cancel();
+                        JOptionPane.showMessageDialog(null, "Haz ganado la partidad felicitaciones");
+                    }
+                }
+            }
+        }
+
+        if (jugador.getTropaInf().getLargo() > 0 && inf) {
+            for (int i = 0; i < jugador.getTropaInf().getLargo(); i++) {
+                Tropa uso = jugador.getTropaInf().encuentra(i);
+
+                switch (uso.getPoscionActual()) {
+                    case 1:
+                        paint(caminoInferior1, jugador.getTropaInf().encuentra(i).getCaracter().getImage());
+                        posicion_real = 2;
+                        break;
+                    case 2:
+                        paint(caminoInferior2, jugador.getTropaInf().encuentra(i).getCaracter().getImage());
+                        caminoInferior1.setIcon(null);
+                        repaint();
+                        posicion_real = 3;
+                        break;
+                    case 3:
+                        paint(caminoInferior3, jugador.getTropaInf().encuentra(i).getCaracter().getImage());
+                        caminoInferior2.setIcon(null);
+                        repaint();
+                        posicion_real = 4;
+                        break;
+                    case 4:
+                        paint(caminoInferior4, jugador.getTropaInf().encuentra(i).getCaracter().getImage());
+                        caminoInferior3.setIcon(null);
+                        repaint();
+                        posicion_real = 5;
+                        break;
+                    default:
+                        posicion_real = 6;
+                        break;
+                }
+
+                if (computadora.getTropaInf().getLargo() > 0) {
+                    if (uso.getPoscionActual() == computadora.getTropaInf().ultimaPosicion().getPoscionActual()) {
+                        if (uso.getTipo().getIdDebilidad() == computadora.getTropaInf().ultimaPosicion().getTipo().getIdTipo()) {
+                            jugador.getTropaInf().tropaEliminar();
+                        } else {
+                            computadora.getTropaInf().tropaEliminar();
+                        }
+                    }
+                }
+
+                uso.setPoscionActual(posicion_real);
+
+                if (uso.getPoscionActual() == 6) {
+                    computadora.getCasCPU().danoCastillo(uso.getDano());
+                    int vidaN = (int) computadora.getCasCPU().getVida();
+                    vidaCPUPB.setValue(vidaN * 10);
+
+                    if (computadora.getCasCPU().castilloDestruido() && !CPU_WINNER) {
+                        JUGADOR_WINNER = true;
+                        t.cancel();
+                        mTimer.cancel();
+                        JOptionPane.showMessageDialog(null, "Haz ganado la partida felicitaciones");
+                    }
+                }
+            }
+        }
+    }
+
+    public void moverUnidades() {
+        int velmil = xVelocity * 1000;
+
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                moverTropas();
+            }
+        };
+
+        t.schedule(tt, 0, velmil);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -343,15 +632,14 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     }//GEN-LAST:event_tropaComboBoxActionPerformed
 
     private void enviarTropaBTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enviarTropaBTActionPerformed
-        
+
 
     }//GEN-LAST:event_enviarTropaBTActionPerformed
 
     private void BtnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnIniciarActionPerformed
-        
+
     }//GEN-LAST:event_BtnIniciarActionPerformed
 
-    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnIniciar;

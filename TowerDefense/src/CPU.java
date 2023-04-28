@@ -30,7 +30,7 @@ public class CPU {
         if(listaTropasCPU.getLargo() == 0){
         int id = random.nextInt(3);
         tropaSeleccionada = tropas.encuentra(id);
-        listaTropasCPU.encola(new Nodo(tropaSeleccionada));
+        listaTropasCPU.encola(new NodoCo(tropaSeleccionada));
        } 
         if ((numTropasCaminoSuperior / cantTropasTotales) > 0.75){
             Inferior.setTropa(tropaSeleccionada);
