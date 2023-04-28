@@ -61,6 +61,22 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
     }
     
+    private Boolean inicializarJuego() {
+        Boolean inicioJuego = true;
+
+        jugador = new Jugador(castilloJugador);
+
+        return inicioJuego;
+    }
+
+    // Permite pintar una imagen en un jlabel
+    public void paint(JLabel Label, Image image) {
+        Icon icono = new ImageIcon(image.getScaledInstance(Label.getWidth(), Label.getHeight(), Image.SCALE_DEFAULT));
+        String soy = Label.getName();
+        Label.setIcon(icono);
+        Label.repaint();
+    }
+    
     public void moverTropas() {
         MoverTropasCPU();
         MoverTropasJugador(true, true);
