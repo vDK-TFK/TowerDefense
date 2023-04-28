@@ -1,135 +1,60 @@
 
 import javax.swing.ImageIcon;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
-/**
- *
- * @author andre
- */
 public class Tropa {
-    
-    private String tipoTropa;
-    private String fortaleza;
-    private String debilidad;
-    private double danoCastillo;
-    private ImageIcon caracter;
+
+    private TipoPersonaje tipo;
+    private double dano;
+    private ImageIcon imagenTropa;
     private boolean tropaJugador = false;
-    
-    
-    /*
-    * El constructor de esta clase se realiza en base a al tipo de personaje,
-    ya que este determinar cuanto daño puede realizar el personaje.
-    */ 
+    private int poscionActual;
 
-    public Tropa(String tipoTropa) {
-        this.tipoTropa = tipoTropa;
-        
-        if(tipoTropa.equals("Mago")){
-            this.fortaleza = "Caballero";
-            this.debilidad = "Arquero";
-            this.danoCastillo = 1.5;
-            this.caracter = new ImageIcon("src/Imagenes/mago.jpeg");
-        } else if(tipoTropa.equals("Caballero")){
-            this.fortaleza = "Arquero";
-            this.debilidad = "Mago";
-            this.danoCastillo = 2;
-            this.caracter = new ImageIcon("src/Imagenes/caballero.jpeg");
-        } else if(tipoTropa.equals("Arquero")){
-            this.fortaleza = "Mago";
-            this.debilidad = "Caballero";
-            this.danoCastillo = 1;
-            this.caracter = new ImageIcon("src/Imagenes/arquero.jpeg");
-        }
-    }
-    
-     // Metodos get
-
-    public String getTipoTropa() {
-        return tipoTropa;
+    public Tropa(TipoPersonaje tipo, ImageIcon imagen, double dano) {
+        this.tipo = tipo;
+        this.dano = dano;
+        this.imagenTropa = imagen;
     }
 
-    public String getFortaleza() {
-        return fortaleza;
+    public TipoPersonaje getTipo() {
+        return tipo;
     }
 
-    public String getDebilidad() {
-        return debilidad;
+    public void setTipo(TipoPersonaje tipo) {
+        this.tipo = tipo;
     }
 
-    public double getDanoCastillo() {
-        return danoCastillo;
+    public double getDano() {
+        return dano;
+    }
+
+    public void setDano(double dano) {
+        this.dano = dano;
     }
 
     public ImageIcon getCaracter() {
-        return caracter;
+        return imagenTropa;
+    }
+
+    public void setCaracter(ImageIcon caracter) {
+        this.imagenTropa = caracter;
     }
 
     public boolean isTropaJugador() {
         return tropaJugador;
     }
-    
-    //Metodos set
-
-    public void setFortaleza(String fortaleza) {
-        this.fortaleza = fortaleza;
-    }
-
-    public void setDebilidad(String debilidad) {
-        this.debilidad = debilidad;
-    }
-
-    public void setDanoCastillo(double danoCastillo) {
-        this.danoCastillo = danoCastillo;
-    }
-
-    public void setCaracter(ImageIcon caracter) {
-        this.caracter = caracter;
-    }
 
     public void setTropaJugador(boolean tropaJugador) {
         this.tropaJugador = tropaJugador;
     }
-    
-     public void setTipoTropa(String tipoTropa) {
-        this.tipoTropa = tipoTropa;
-        
-        if(tipoTropa.equals("Mago")){
-            this.fortaleza = "Caballero";
-            this.debilidad = "Arquero";
-            this.danoCastillo = 1.5;
-            this.caracter = new ImageIcon("src/Imagenes/arquero.jpeg");
-        } else if(tipoTropa.equals("Caballero")){
-            this.fortaleza = "Arquero";
-            this.debilidad = "Mago";
-            this.danoCastillo = 2;
-            this.caracter = new ImageIcon("src/Imagenes/caballero.caballero.jpeg");
-        } else if(tipoTropa.equals("Arquero")){
-            this.fortaleza = "Mago";
-            this.debilidad = "Caballero";
-            this.danoCastillo = 1;
-            this.caracter = new ImageIcon("src/Imagenes/arquero.jpeg");
-        }
-        
-    }
-     
-   public void eliminarTropa(Camino camino){
-       camino.eliminarTropa();
-       camino.setTropa(null);
-   }
-     
-        
-        
-        
-        
-    
 
-    
-    
-    
-    
-    
+    public int getPoscionActual() {
+        return poscionActual;
+    }
+
+    public void setPoscionActual(int poscionActual) {
+        this.poscionActual = poscionActual;
+    }
 }
+        

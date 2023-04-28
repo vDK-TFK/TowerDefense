@@ -9,8 +9,8 @@
  */
 public class Cola {
     
-    private Nodo frente;
-    private Nodo ultimo;
+    private NodoCo frente;
+    private NodoCo ultimo;
     private int largo;
 
     public Cola() {
@@ -19,7 +19,7 @@ public class Cola {
         this.largo = 0;
     }
         
-    public void encola(Nodo nuevoNodo){
+    public void encola(NodoCo nuevoNodo){
         if(frente == null){  // significa que la cola esta vacia
             frente = nuevoNodo;
             ultimo = nuevoNodo;                    
@@ -30,8 +30,8 @@ public class Cola {
         largo++;
     }
     
-    public Nodo atiende(){
-        Nodo aux = frente;
+    public NodoCo atiende(){
+        NodoCo aux = frente;
         if(frente!=null){
             frente=frente.getAtras();
             aux.setAtras(null);
@@ -41,7 +41,7 @@ public class Cola {
     }
     
     public Tropa encuentra(int id){
-        Nodo aux = frente;
+        NodoCo aux = frente;
         while(id > 0){
             aux = aux.getAtras();
         }
@@ -50,7 +50,7 @@ public class Cola {
     
     public String imprimir(){
         String s="";
-        Nodo aux=frente;
+        NodoCo aux=frente;
         while(aux!=null){
             s+=aux.getDato() +"\n";
             aux=aux.getAtras();
