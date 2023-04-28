@@ -1,12 +1,28 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 
-/**
- *
- * @author andre
- */
 public class Jugador {
-    
+
+    private Castillo casJugador;
+    private Cola tropaSup = new Cola();
+    private Cola tropaInf = new Cola();
+
+    public Jugador(Castillo casJugador) {
+        this.casJugador = casJugador;
+    }
+
+    public Castillo getCasJugador() {
+        return casJugador;
+    }
+
+    public void setCasJugador(Castillo casJugador) {
+        this.casJugador = casJugador;
+    }
+
+    public Cola getTropasSup() {
+        return tropaSup;
+    }
+
+    public Cola getTropaInf() {
+        return tropaInf;
+    }
 }
+  

@@ -321,6 +321,17 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
         t.schedule(tt, 0, velmil);
     }
+    
+    public void iniciarCronometro(){
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                Cronometro();
+            }
+        };
+
+        mTimer.schedule(tt, 0, 10);
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -639,7 +650,31 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     private void BtnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnIniciarActionPerformed
 
     }//GEN-LAST:event_BtnIniciarActionPerformed
+   
+    private void Cronometro() {
+        ActualizaTiempo();
+        ActualizarCronometro();
+    }
 
+    private void ActualizarCronometro() {
+        String cronometro = minutos + "m:" + segundos + "s";
+        lblCronometro.setText(cronometro);
+        Milisegundos.setText("." + milisegundos);
+    }
+
+    private void ActualizaTiempo() {
+        milisegundos++;
+
+        if (milisegundos == 100) {
+            milisegundos = 0;
+            segundos++;
+        }
+
+        if (segundos == 60) {
+            segundos = 0;
+            minutos++;
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnIniciar;
