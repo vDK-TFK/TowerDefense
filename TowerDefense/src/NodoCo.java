@@ -1,19 +1,19 @@
 
 public class NodoCo {
-    private Tropa dato;
+        private Tropa tropa;
     private NodoCo atras;
-    
-    public NodoCo(Tropa dato) {
-        this.dato = dato;
+
+    public NodoCo(Tropa tropa) {
+        this.tropa = tropa;
         this.atras = null;
     }
 
-    public Tropa getDato() {
-        return dato;
+    public Tropa getTropa() {
+        return tropa;
     }
 
-    public void setDato(Tropa dato) {
-        this.dato = dato;
+    public void setTropa(Tropa tropa) {
+        this.tropa = tropa;
     }
 
     public NodoCo getAtras() {
