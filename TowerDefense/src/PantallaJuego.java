@@ -60,7 +60,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         castilloCPU = new Castillo(10);
 
     }
-    
+
     private Boolean inicializarJuego() {
         Boolean inicioJuego = true;
 
@@ -76,7 +76,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         Label.setIcon(icono);
         Label.repaint();
     }
-    
+
     public void moverTropas() {
         MoverTropasCPU();
         MoverTropasJugador(true, true);
@@ -325,7 +325,7 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         }
     }
 
-    public void moverUnidades() {
+    private void moverUnidades() {
         int velmil = xVelocity * 1000;
 
         TimerTask tt = new TimerTask() {
@@ -337,8 +337,8 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
 
         t.schedule(tt, 0, velmil);
     }
-    
-    public void iniciarCronometro(){
+
+    public void iniciarCronometro() {
         TimerTask tt = new TimerTask() {
             @Override
             public void run() {
@@ -347,6 +347,21 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
         };
 
         mTimer.schedule(tt, 0, 10);
+    }
+
+    private void mostrarUnidadesCPU() {
+        String mensaje_mostrar = "";
+
+        if (computadora.getTropaSup().getLargo() > 0) {
+
+            mensaje_mostrar += computadora.getTropaSup().imprimir();
+        }
+
+        if (computadora.getTropaInf().getLargo() > 0) {
+            mensaje_mostrar += computadora.getTropaInf().imprimir();
+        }
+
+        unidadesCPUTxt.setText(mensaje_mostrar);
     }
 
     @SuppressWarnings("unchecked")
@@ -699,9 +714,29 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
     }//GEN-LAST:event_enviarTropaBTActionPerformed
 
     private void BtnIniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnIniciarActionPerformed
+        iniciarCronometro();
 
+        computadora = new CPU(castilloCPU);
+        jugador = new Jugador(castilloJugador);
+
+        tTropa = new Tropa(arquero, new ImageIcon("src/Imagenes/imagenArquero.jpeg"), 1);
+        tTropa.setPoscionActual(4);
+        NodoPersonaje = new NodoCo(tTropa);
+        computadora.getTropaSup().encola(NodoPersonaje);
+
+        tTropa = new Tropa(mago, new ImageIcon("src/Imagenes/imagenMago.jpeg"), 1.5);
+        tTropa.setPoscionActual(4);
+        NodoPersonaje = new NodoCo(tTropa);
+        computadora.getTropaInf().encola(NodoPersonaje);
+
+        mostrarUnidadesCPU();
+
+        vidaJugadorPB.setValue((int) jugador.getCasJugador().getVida() * 10);
+        vidaCPUPB.setValue((int) computadora.getCasCPU().getVida() * 10);
+
+        moverUnidades();
     }//GEN-LAST:event_BtnIniciarActionPerformed
-   
+
     private void Cronometro() {
         ActualizaTiempo();
         ActualizarCronometro();
@@ -725,6 +760,46 @@ public class PantallaJuego extends javax.swing.JFrame implements ActionListener 
             segundos = 0;
             minutos++;
         }
+    }
+
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PantallaJuego.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(PantallaJuego.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(PantallaJuego.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PantallaJuego.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PantallaJuego().setVisible(true);
+            }
+        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
